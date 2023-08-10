@@ -15,7 +15,7 @@ keywords = ["import", "cli"]
 requires-python = ">=3.11"
 
 [project.optional-dependencies]
-dev = ["black", "flake8", "mypy", "pylint",  "pytest"]
+dev = ["black==23.*", "flake8", "mypy", "pylint",  "pytest"]
 
 [project.urls]
 Repository = "https://github.com/smajert/WhatTheImport"
