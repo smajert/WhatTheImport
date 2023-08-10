@@ -21,7 +21,7 @@ dev = ["black", "flake8", "mypy", "pylint",  "pytest"]
 Repository = "https://github.com/smajert/WhatTheImport"
 
 [project.scripts]
-whattheimport = "what_the_import.wti:main"
+whattheimport = "whattheimport.wti:main"
 
 [tool.black]
 line-length = 120

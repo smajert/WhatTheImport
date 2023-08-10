@@ -1,14 +1,14 @@
 import pytest
 
-from what_the_import import wti
+from whattheimport import wti
 
 EXPECTED_IMPORTS_STDLIB = {
-    "pathlib": 1, "random": 1, "time": 2,
+    "pathlib": 1,
+    "random": 1,
+    "time": 2,
 }
 
-EXPECTED_IMPORTS_NON_STDLIB = {
-    "certainly_not_in_stdlib": 1, "deepdiff": 1, "matplotlib": 1, "numpy": 1
-}
+EXPECTED_IMPORTS_NON_STDLIB = {"certainly_not_in_stdlib": 1, "deepdiff": 1, "matplotlib": 1, "numpy": 1}
 
 
 @pytest.fixture()
@@ -50,7 +50,7 @@ def example_project(tmp_path):
     with open(folder_a / "stdlib_only.py", "w") as stdlib_only_file:
         stdlib_only_file.write(stdlib_only)
 
-    with open(folder_b/ "non_stdlib_only.py", "w") as non_stdlib_only_file:
+    with open(folder_b / "non_stdlib_only.py", "w") as non_stdlib_only_file:
         non_stdlib_only_file.write(non_stdlib_only)
 
     return proj_folder
@@ -80,5 +80,3 @@ def test_find_imports_in_specific_file(example_project):
 def test_exception_if_file_does_not_exist(example_project):
     with pytest.raises(IOError):
         wti.find_imports(example_project / "not_a_file.py", ignore_stdlib=False)
-
-
