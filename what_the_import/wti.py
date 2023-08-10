@@ -1,5 +1,8 @@
+import argparse
 import ast
+import json
 from pathlib import Path
+from pprint import pprint
 from sys import stdlib_module_names
 
 
@@ -11,7 +14,7 @@ def union_of_counting_dicts(dict_a: dict[str, int], dict_b: dict[str, int]) -> d
 
 
 def find_imports_in_file(py_file: Path) -> dict[str, int]:
-    with open(py_file) as file:
+    with open(py_file, "r") as file:
        root = ast.parse(file.read(), filename=str(py_file))
 
     imported_packages = {}
@@ -47,13 +50,21 @@ def find_imports(py_file_or_dir: Path, *, ignore_stdlib: bool) -> dict[str, int]
     return found_imports
 
 
-
 if __name__ == "__main__":
-    #proj_folder = Path(r"C:\my_files\Projekte\WhatTheImport\example_pys")
-    proj_folder = Path(r"C:\my_files\Projekte\FaviconGen")
+    parser = argparse.ArgumentParser(
+        description="List all python imports in a file or in all *.py files of a project."
+    )
+    parser.add_argument("target", help="File or directory to list imports from", type=Path)
+    parser.add_argument(
+        "--ignore_stdlib", action="store_true", help="Ignore all imports from the python standard library."
+    )
+    parser.add_argument(
+        "--json_out", type=Path, default=None, help="Optional json-file to output found packages to"
+    )
+    args = parser.parse_args()
 
-    found_imports = find_imports(proj_folder, ignore_stdlib=True)
-
-
-    import pprint
-    pprint.pprint(found_imports)
+    imports = find_imports(args.target, ignore_stdlib=args.ignore_stdlib)
+    pprint(imports)
+    if args.json_out is not None:
+        with open(args.json_out, "w") as json_file:
+            json.dump(imports, json_file, indent=3)
