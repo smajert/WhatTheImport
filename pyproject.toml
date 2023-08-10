@@ -1,0 +1,33 @@
+# pyproject.toml
+
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "whattheimport"
+version = "0.0.0"
+description = "List all imports in a project or file."
+readme = "readme.md"
+authors = [{ name = "Stephan Majert", email = "stephan.majert@gmail.com" }]
+license = { file = "license.md" }
+keywords = ["import", "cli"]
+requires-python = ">=3.11"
+
+[project.optional-dependencies]
+dev = ["black", "flake8", "mypy", "pylint",  "pytest"]
+
+[project.urls]
+Repository = "https://github.com/smajert/WhatTheImport"
+
+[project.scripts]
+whattheimport = "what_the_import.wti:main"
+
+[tool.black]
+line-length = 120
+
+[tool.pylint]
+max-line-length = 120
+
+[tool.mypy]
+ignore_missing_imports = true

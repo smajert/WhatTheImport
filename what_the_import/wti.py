@@ -50,7 +50,7 @@ def find_imports(py_file_or_dir: Path, *, ignore_stdlib: bool) -> dict[str, int]
     return found_imports
 
 
-if __name__ == "__main__":
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="List all python imports in a file or in all *.py files of a project."
     )
@@ -68,3 +68,7 @@ if __name__ == "__main__":
     if args.json_out is not None:
         with open(args.json_out, "w") as json_file:
             json.dump(imports, json_file, indent=3)
+
+
+if __name__ == "__main__":
+    main()
