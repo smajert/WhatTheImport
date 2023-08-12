@@ -7,7 +7,7 @@ from sys import stdlib_module_names
 import warnings
 
 
-def union_of_counting_dicts(dict_a: dict[str, int], dict_b: dict[str, int]) -> dict[str, int]:
+def _union_of_counting_dicts(dict_a: dict[str, int], dict_b: dict[str, int]) -> dict[str, int]:
     dict_union = {}
     for key in dict_a | dict_b:
         dict_union[key] = int(dict_a.get(key) or 0) + int(dict_b.get(key) or 0)
@@ -15,7 +15,14 @@ def union_of_counting_dicts(dict_a: dict[str, int], dict_b: dict[str, int]) -> d
 
 
 def find_imports_in_file(py_file: Path) -> dict[str, int]:
-    with open(py_file, "r") as file:
+    """
+    Find packages imported in a python file.
+
+    :param py_file: Location of the python file.
+    :return: Package names and amount of times they are imported in `py_file`.
+    """
+
+    with open(py_file, "r", encoding="utf-8") as file:
         root = ast.parse(file.read(), filename=str(py_file))
 
     imported_packages: dict[str, int] = {}
@@ -24,9 +31,7 @@ def find_imports_in_file(py_file: Path) -> dict[str, int]:
             imported_package = node.names[0].name.split(".")[0]
         elif isinstance(node, ast.ImportFrom):
             if node.module is None:
-                warnings.warn(
-                    f"Unknown module in 'import from' statement in file {py_file}, listing as 'unknown' ..."
-                )
+                warnings.warn(f"Unknown module in 'import from' statement in file {py_file}, listing as 'unknown' ...")
                 imported_package = "unknown"
             else:
                 imported_package = node.module.split(".")[0]
@@ -42,10 +47,18 @@ def find_imports_in_file(py_file: Path) -> dict[str, int]:
 
 
 def find_imports(py_file_or_dir: Path, *, ignore_stdlib: bool) -> dict[str, int]:
+    """
+    Find packages imported in a python file or a python project.
+
+    :param py_file_or_dir: Location of python file or project folder. If project folder, only *.py files will
+        be searched for imports.
+    :param ignore_stdlib: Whether to ignore all imports from the python standard library.
+    :return: Package names and amount of times they are imported.
+    """
     found_imports: dict[str, int] = {}
     if py_file_or_dir.is_dir():
         for py_file in py_file_or_dir.rglob("*.py"):
-            found_imports = union_of_counting_dicts(found_imports, find_imports_in_file(py_file))
+            found_imports = _union_of_counting_dicts(found_imports, find_imports_in_file(py_file))
     elif py_file_or_dir.is_file():  # also look into file not ending in *.py if asked directly
         found_imports = find_imports_in_file(py_file_or_dir)
     else:
@@ -69,7 +82,7 @@ def main() -> None:
     imports = find_imports(args.target, ignore_stdlib=args.ignore_stdlib)
     pprint(imports)
     if args.json_out is not None:
-        with open(args.json_out, "w") as json_file:
+        with open(args.json_out, "w", encoding="utf-8") as json_file:
             json.dump(imports, json_file, indent=3)
 
 

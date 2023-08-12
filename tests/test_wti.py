@@ -44,13 +44,13 @@ def example_project(tmp_path):
         "import numpy as np\n"
     )
 
-    with open(proj_folder / "should_not_be_found.txt", "w") as should_not_be_found_file:
+    with open(proj_folder / "should_not_be_found.txt", "w", encoding="utf-8") as should_not_be_found_file:
         should_not_be_found_file.write(should_not_be_found)
 
-    with open(folder_a / "stdlib_only.py", "w") as stdlib_only_file:
+    with open(folder_a / "stdlib_only.py", "w", encoding="utf-8") as stdlib_only_file:
         stdlib_only_file.write(stdlib_only)
 
-    with open(folder_b / "non_stdlib_only.py", "w") as non_stdlib_only_file:
+    with open(folder_b / "non_stdlib_only.py", "w", encoding="utf-8") as non_stdlib_only_file:
         non_stdlib_only_file.write(non_stdlib_only)
 
     return proj_folder
