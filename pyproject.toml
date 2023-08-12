@@ -1,18 +1,18 @@
 # pyproject.toml
 
 [build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61.0.0"]
 
 [project]
-name = "whattheimport"
-version = "0.0.0"
-description = "List all imports in a project or file."
-readme = "readme.md"
 authors = [{ name = "Stephan Majert", email = "stephan.majert@gmail.com" }]
-license = { file = "license.md" }
+description = "List all imports in a project or file."
+dynamic = ["version"]
 keywords = ["import", "cli"]
-requires-python = ">=3.11"
+license = { file = "license.md" }
+name = "whattheimport"
+readme = "readme.md"
+requires-python = ">=3.10"
 
 [project.optional-dependencies]
 dev = ["black==23.*", "flake8", "mypy", "pylint",  "pytest"]
@@ -28,6 +28,9 @@ line-length = 120
 
 [tool.pylint]
 max-line-length = 120
+
+[tool.setuptools.dynamic]
+version = {attr = "whattheimport.__version__"}
 
 [tool.mypy]
 ignore_missing_imports = true
