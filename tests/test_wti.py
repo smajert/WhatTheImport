@@ -17,6 +17,7 @@ def example_project(tmp_path):
     Project structure:
         example_project/
             should_not_be_found.txt
+            wrong_syntax.txt
             folder_a/
                 stdlib_only.py
             folder_b/
@@ -31,6 +32,7 @@ def example_project(tmp_path):
 
     # file contents:
     should_not_be_found = "import ast"
+    wrong_syntax = "impot cat fom feline"
     stdlib_only = (
         "from pathlib import Path\n"
         "from random import Random as random_alias\n"
@@ -46,6 +48,9 @@ def example_project(tmp_path):
 
     with open(proj_folder / "should_not_be_found.txt", "w", encoding="utf-8") as should_not_be_found_file:
         should_not_be_found_file.write(should_not_be_found)
+
+    with open(proj_folder / "wrong_syntax.txt", "w", encoding="utf-8") as wrong_syntax_file:
+        wrong_syntax_file.write(wrong_syntax)
 
     with open(folder_a / "stdlib_only.py", "w", encoding="utf-8") as stdlib_only_file:
         stdlib_only_file.write(stdlib_only)
@@ -80,3 +85,8 @@ def test_find_imports_in_specific_file(example_project):
 def test_exception_if_file_does_not_exist(example_project):
     with pytest.raises(IOError):
         wti.find_imports(example_project / "not_a_file.py", ignore_stdlib=False)
+
+
+def test_exception_on_wrong_syntax(example_project):
+    with pytest.raises(SyntaxError):
+        wti.find_imports(example_project / "wrong_syntax.txt", ignore_stdlib=False)
